@@ -1,0 +1,457 @@
+{
+	"info": {
+		"_postman_id": "4dcedf05-7d6e-4cb6-b8a0-a860c87fc9da",
+		"name": "Booking System Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50283136",
+		"_collection_link": "https://patryk-krol-s-team.postman.co/workspace/Patryk-Krol's-Workspace~c33caab8-9fc8-473a-8f5a-c696507f829d/collection/50283136-4dcedf05-7d6e-4cb6-b8a0-a860c87fc9da?action=share&source=collection_link&creator=50283136"
+	},
+	"item": [
+		{
+			"name": "Auth - CreateToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 200\" , () =>  {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"})\r",
+							"\r",
+							"const jsonData = pm.response.json()\r",
+							"\r",
+							"if (jsonData.token) {\r",
+							"    pm.collectionVariables.set (\"accessToken\", jsonData.token)\r",
+							"    \r",
+							"   \r",
+							"} else {\r",
+							"    pm.expect.fail (\"Token not found in response\")\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Response time is less than 800ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(800);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{bookingUrl}}/auth",
+					"host": [
+						"{{bookingUrl}}"
+					],
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json()\r",
+							"\r",
+							"pm.test(\"Status code is 200\" , () =>  {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"})\r",
+							"\r",
+							"\r",
+							"if (jsonData.bookingid) {\r",
+							"    \r",
+							"    pm.collectionVariables.set(\"currentBookingId\", jsonData.bookingid); \r",
+							"} else {\r",
+							"    pm.expect.fail(\"currentBookingId not found in response\");\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Response contains a valid booking ID\", () => {\r",
+							"    pm.expect(jsonData.bookingid).to.exist;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Total price is greater than 0\", () => {\r",
+							"    pm.expect(jsonData.booking.totalprice).to.be.above(0);\r",
+							"});\r",
+							"pm.test(\"Check-in date is before check-out date\", () => {\r",
+							"    const checkin = new Date(jsonData.booking.bookingdates.checkin);\r",
+							"    const checkout = new Date(jsonData.booking.bookingdates.checkout);\r",
+							"\r",
+							"    pm.expect(checkin.getTime()).to.be.below(checkout.getTime());\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 800ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(800);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\": \"Patryk\",\r\n    \"lastname\": \"Krol\",\r\n    \"totalprice\":500,\r\n    \"depositpaid\": true,\r\n    \"bookingdates\":{\r\n    \"checkin\": \"2025-12-31\",\r\n    \"checkout\": \"2026-01-25\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{bookingUrl}}/booking",
+					"host": [
+						"{{bookingUrl}}"
+					],
+					"path": [
+						"booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\" , () =>  {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check Firstname is correct\", () => {\r",
+							"    pm.expect(jsonData.firstname).to.eql(\"Patryk\")\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data types are correct\", () => {\r",
+							"    pm.expect(jsonData.firstname).to.be.a(\"string\")\r",
+							"    pm.expect(jsonData.totalprice).to.be.a(\"number\")\r",
+							"    pm.expect(jsonData.depositpaid).to.be.a(\"boolean\")\r",
+							"    \r",
+							"\r",
+							"});\r",
+							"pm.test(\"Total price is greater than 0\", () => {\r",
+							"    pm.expect(jsonData.totalprice).to.be.above(0);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check-in date is before check-out date\", () => {\r",
+							"    const checkin = new Date(jsonData.bookingdates.checkin);\r",
+							"    const checkout = new Date(jsonData.bookingdates.checkout);\r",
+							"\r",
+							"    pm.expect(checkin.getTime()).to.be.below(checkout.getTime());\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Booking dates are present\", () => {\r",
+							"    pm.expect(jsonData.bookingdates).to.have.property(\"checkin\");\r",
+							"    pm.expect(jsonData.bookingdates).to.have.property(\"checkout\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 800ms\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(800);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{bookingUrl}}/booking/{{currentBookingId}}",
+					"host": [
+						"{{bookingUrl}}"
+					],
+					"path": [
+						"booking",
+						"{{currentBookingId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\" , () =>  {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Firstname and lastname is updated successfully\", () => {\r",
+							"    pm.expect(jsonData.firstname).to.eql(\"Patryk-Updated\");\r",
+							"    pm.expect(jsonData.lastname).to.eql(\"Krol-Updated\")\r",
+							"});\r",
+							"pm.test(\"Data types are correct\", () => {\r",
+							"    pm.expect(jsonData.firstname).to.be.a(\"string\")\r",
+							"})\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is acceptable\", () => {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(800);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{accessToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\": \"Patryk-Updated\",\r\n    \"lastname\": \"Krol-Updated\",\r\n    \"totalprice\":500,\r\n    \"depositpaid\": true,\r\n    \"bookingdates\":{\r\n    \"checkin\": \"2025-12-31\",\r\n    \"checkout\": \"2026-01-25\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{bookingUrl}}/booking/{{currentBookingId}}",
+					"host": [
+						"{{bookingUrl}}"
+					],
+					"path": [
+						"booking",
+						"{{currentBookingId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"    pm.response.to.have.status(201)\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{accessToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{bookingUrl}}/booking/{{currentBookingId}}",
+					"host": [
+						"{{bookingUrl}}"
+					],
+					"path": [
+						"booking",
+						"{{currentBookingId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Deletion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404 Not Found\", () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{bookingUrl}}/booking/{{currentBookingId}}",
+					"host": [
+						"{{bookingUrl}}"
+					],
+					"path": [
+						"booking",
+						"{{currentBookingId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateToken-InvalidPW",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Login failed - incorrect password\", () => {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(jsonData.reason).to.eql(\"Bad credentials\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Token is not returned\", () => {\r",
+							"    pm.expect(pm.response.json().token).to.be.undefined;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"paasdas1212\"\r\n}"
+				},
+				"url": {
+					"raw": "{{bookingUrl}}/auth",
+					"host": [
+						"{{bookingUrl}}"
+					],
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "currentBookingId",
+			"value": ""
+		},
+		{
+			"key": "bookingUrl",
+			"value": "https://restful-booker.herokuapp.com"
+		},
+		{
+			"key": "accessToken",
+			"value": "8cb713904285798"
+		}
+	]
+}
