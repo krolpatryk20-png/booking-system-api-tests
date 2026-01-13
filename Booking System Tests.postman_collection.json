@@ -125,7 +125,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"firstname\": \"Patryk\",\r\n    \"lastname\": \"Krol\",\r\n    \"totalprice\":500,\r\n    \"depositpaid\": \true\",\r\n    \"bookingdates\":{\r\n    \"checkin\": \"2025-12-31\",\r\n    \"checkout\": \"2026-01-25\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+					"raw": "{\r\n    \"firstname\": \"Patryk\",\r\n    \"lastname\": \"Krol\",\r\n    \"totalprice\":500,\r\n    \"depositpaid\": \true,\r\n    \"bookingdates\":{\r\n    \"checkin\": \"2025-12-31\",\r\n    \"checkout\": \"2026-01-25\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -271,7 +271,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"firstname\": \"Patryk-Updated\",\r\n    \"lastname\": \"Krol-Updated\",\r\n    \"totalprice\":500,\r\n    \"depositpaid\": \true\",\r\n    \"bookingdates\":{\r\n    \"checkin\": \"2025-12-31\",\r\n    \"checkout\": \"2026-01-25\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+					"raw": "{\r\n    \"firstname\": \"Patryk-Updated\",\r\n    \"lastname\": \"Krol-Updated\",\r\n    \"totalprice\":500,\r\n    \"depositpaid\": \true,\r\n    \"bookingdates\":{\r\n    \"checkin\": \"2025-12-31\",\r\n    \"checkout\": \"2026-01-25\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
